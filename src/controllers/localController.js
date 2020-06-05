@@ -10,14 +10,14 @@ router.get('/', async (req, res) => {
         
         return res.send({
                     success: true, 
-                    total: data.oficina.length,
-                    message: 'Oficinas listadas com sucesso!', 
-                    content: data.oficina
+                    total: data.local.length,
+                    message: 'Locais listados com sucesso!', 
+                    content: data.local
                 });
 
     }catch(err){
         console.log(err);
-        return res.status(400).send({success: false, message: 'Não foi possivel listas as oficinas.'})
+        return res.status(400).send({success: false, message: 'Não foi possivel listas os locais.'})
     }
 });
 
@@ -26,20 +26,20 @@ router.get('/:id', async (req, res) => {
         var fp = fs.readFileSync(file_path, "utf8");
         var data = JSON.parse(fp);
 
-        var oficina = data.oficina.filter(function(element){
+        var local = data.local.filter(function(element){
             return element._id == req.params.id
         });
         
 
         return res.send({
                     success: true, 
-                    message: oficina !== null ? 'Oficina encontrada com sucesso!' : 'Ofina não localizada!', 
-                    content: oficina
+                    message: local !== null ? 'Local encontrado com sucesso!' : 'Local não localizado!', 
+                    content: local
                 });
 
     }catch(err){
         console.log(err);
-        return res.status(400).send({success: false, message: 'Não foi possivel encontrar a oficina.'})
+        return res.status(400).send({success: false, message: 'Não foi possivel encontrar o local.'})
     }
 });
 
@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
         var fp = fs.readFileSync(file_path, "utf8");
         var data = JSON.parse(fp);
         
-        var novoId = data.oficina[data.oficina.length - 1];
+        var novoId = data.local[data.local.length - 1];
         if(novoId){
             novoId = novoId._id + 1;
         }else{
@@ -56,19 +56,19 @@ router.post('/', async (req, res) => {
         }
 
         req.body._id = novoId;
-        data.oficina.push(req.body);
+        data.local.push(req.body);
 
         fp = fs.writeFileSync(file_path, JSON.stringify(data));
 
         return res.send({
                     success: true, 
-                    message: 'Oficina criada com sucesso!', 
+                    message: 'Local criado com sucesso!', 
                     content: req.body
                 });
 
     }catch(err){
         console.log(err);
-        return res.status(400).send({success: false, message: 'Não foi possivel salvar a oficina.'})
+        return res.status(400).send({success: false, message: 'Não foi possivel salvar o local.'})
     }
 });
 
@@ -78,35 +78,35 @@ router.put('/:id', async (req, res) => {
         var fp = fs.readFileSync(file_path, "utf8");
         var data = JSON.parse(fp);
         
-        var oficinaOld = data.oficina.filter(function(element){
+        var localOld = data.local.filter(function(element){
             return element._id == req.params.id
         });
 
-        if(!oficinaOld || oficinaOld.length == 0){
+        if(!localOld || localOld.length == 0){
             return res.send({
                 success: false, 
-                message: 'Oficina não encontrada!', 
+                message: 'Local não encontrado!', 
                 content: undefined
             });
         }
 
         req.body._id = req.params.id;
 
-        var index = data.oficina.map(function(e) { return e._id; }).indexOf(parseInt(req.params.id));
+        var index = data.local.map(function(e) { return e._id; }).indexOf(parseInt(req.params.id));
 
-        data.oficina[index] = req.body;
+        data.local[index] = req.body;
 
         fp = fs.writeFileSync(file_path, JSON.stringify(data));        
         
         return res.send({
                     success: true, 
-                    message: 'Oficina alterada com sucesso!', 
+                    message: 'Local alterado com sucesso!', 
                     content: req.body
                 });
 
     }catch(err){
         console.log(err);
-        return res.status(400).send({success: false, message: 'Não foi possivel salvar a oficina.'})
+        return res.status(400).send({success: false, message: 'Não foi possivel salvar o local.'})
     }
 });
 
@@ -115,7 +115,7 @@ router.delete('/:id', async (req, res) => {
         var fp = fs.readFileSync(file_path, "utf8");
         var data = JSON.parse(fp);
 
-        data.oficina = data.oficina.filter(function(element){
+        data.local = data.local.filter(function(element){
             return element._id != req.params.id
         });
 
@@ -123,13 +123,13 @@ router.delete('/:id', async (req, res) => {
 
         return res.send({
                     success: true, 
-                    message: 'Oficina removida com sucesso!'
+                    message: 'Local removido com sucesso!'
                 });
 
     }catch(err){
         console.log(err);
-        return res.status(400).send({success: false, message: 'Não foi possivel encontrar a oficina.'})
+        return res.status(400).send({success: false, message: 'Não foi possivel encontrar o local.'})
     }
 });
 
-module.exports = app => app.use('/oficinas', router);
+module.exports = app => app.use('/locais', router);

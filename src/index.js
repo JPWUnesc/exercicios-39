@@ -11,5 +11,7 @@ app.get('/', (req, res)=>{
 });
 
 require('./controllers/oficinaController')(app);
+require('./controllers/localController')(app);
+require('./controllers/usuarioController')(app);
 
 app.listen(3000);
